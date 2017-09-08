@@ -4,6 +4,10 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace Imposto.Core.Domain
 {
@@ -32,6 +36,8 @@ namespace Imposto.Core.Domain
 
             this.EstadoDestino = pedido.EstadoOrigem;
             this.EstadoOrigem = pedido.EstadoDestino;
+
+            var ItensDaNotaFiscalAdicionar = new List<NotaFiscalItem>();
 
             foreach (PedidoItem itemPedido in pedido.ItensDoPedido)
             {
@@ -152,7 +158,43 @@ namespace Imposto.Core.Domain
                 }
                 notaFiscalItem.NomeProduto = itemPedido.NomeProduto;
                 notaFiscalItem.CodigoProduto = itemPedido.CodigoProduto;
-            }            
+
+                ItensDaNotaFiscalAdicionar.Add(notaFiscalItem);
+            }
+
+            this.ItensDaNotaFiscal = ItensDaNotaFiscalAdicionar;
+
+            gerarNotaXML(this);
         }
+
+        private bool gerarNotaXML(NotaFiscal notaFiscal)
+        {
+            //XmlWriter escritorXML;
+            XmlSerializer serializardorXML;
+            StreamWriter escritorTexto;
+            string diretorioArquivoNota;
+
+            if (notaFiscal == null)
+                return false;
+
+            diretorioArquivoNota = ConfigurationSettings.AppSettings["PastaXMLsNotasFicais"];
+
+            if (string.IsNullOrWhiteSpace(diretorioArquivoNota))
+                return false;
+
+            diretorioArquivoNota += "\\nf_" + notaFiscal.NumeroNotaFiscal + ".xml";
+
+            using (escritorTexto = new StreamWriter(diretorioArquivoNota))
+            {
+                serializardorXML = new XmlSerializer(this.GetType());
+                //escritorXML = XmlWriter.Create(escritorTexto);
+                //serializardorXML.Serialize(escritorXML, notaFiscal);
+
+                serializardorXML.Serialize(escritorTexto, notaFiscal);
+            }
+
+            return true;
+        }
+
     }
 }

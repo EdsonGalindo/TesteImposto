@@ -57,10 +57,15 @@ namespace TesteImposto
 
             foreach (DataRow row in table.Rows)
             {
+                var itemBrinde = row["Brinde"];
+
+                if (itemBrinde == System.DBNull.Value)
+                    itemBrinde = false;
+
                 pedido.ItensDoPedido.Add(
                     new PedidoItem()
                     {
-                        Brinde = Convert.ToBoolean(row["Brinde"]),
+                        Brinde = Convert.ToBoolean(itemBrinde),
                         CodigoProduto =  row["Codigo do produto"].ToString(),
                         NomeProduto = row["Nome do produto"].ToString(),
                         ValorItemPedido = Convert.ToDouble(row["Valor"].ToString())            
