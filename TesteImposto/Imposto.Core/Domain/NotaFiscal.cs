@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using Imposto.Core.Data;
 
 namespace Imposto.Core.Domain
 {
@@ -20,8 +21,16 @@ namespace Imposto.Core.Domain
 
         public string EstadoDestino { get; set; }
         public string EstadoOrigem { get; set; }
-
+        
+        [XmlIgnore]
         public IEnumerable<NotaFiscalItem> ItensDaNotaFiscal { get; set; }
+
+        [XmlElement("ItensDaNotaFiscal")]
+        public List<NotaFiscalItem> ItensDaNotaFiscalSerializavel
+        {
+            get { return ItensDaNotaFiscal.ToList<NotaFiscalItem>(); }
+            set { ItensDaNotaFiscal = value as IEnumerable<NotaFiscalItem>;  }
+        }
 
         public NotaFiscal()
         {
@@ -34,8 +43,8 @@ namespace Imposto.Core.Domain
             this.Serie = new Random().Next(Int32.MaxValue);
             this.NomeCliente = pedido.NomeCliente;
 
-            this.EstadoDestino = pedido.EstadoOrigem;
-            this.EstadoOrigem = pedido.EstadoDestino;
+            this.EstadoDestino = pedido.EstadoDestino;
+            this.EstadoOrigem = pedido.EstadoOrigem;
 
             var ItensDaNotaFiscalAdicionar = new List<NotaFiscalItem>();
 
@@ -164,12 +173,20 @@ namespace Imposto.Core.Domain
 
             this.ItensDaNotaFiscal = ItensDaNotaFiscalAdicionar;
 
-            gerarNotaXML(this);
+            if (!gerarNotaXML(this))
+                return;
+
+            NotaFiscalRepository repositorioNotaFiscal = new NotaFiscalRepository();
+            repositorioNotaFiscal.salvarNotaFiscal(this);
+
+            if (this.Id > 0)
+                repositorioNotaFiscal.salvarItemNotaFiscal(this);
+            else
+                return;
         }
 
         private bool gerarNotaXML(NotaFiscal notaFiscal)
         {
-            //XmlWriter escritorXML;
             XmlSerializer serializardorXML;
             StreamWriter escritorTexto;
             string diretorioArquivoNota;
@@ -186,11 +203,9 @@ namespace Imposto.Core.Domain
 
             using (escritorTexto = new StreamWriter(diretorioArquivoNota))
             {
-                serializardorXML = new XmlSerializer(this.GetType());
-                //escritorXML = XmlWriter.Create(escritorTexto);
-                //serializardorXML.Serialize(escritorXML, notaFiscal);
-
+                serializardorXML = new XmlSerializer(notaFiscal.GetType());
                 serializardorXML.Serialize(escritorTexto, notaFiscal);
+                escritorTexto.Close();
             }
 
             return true;
