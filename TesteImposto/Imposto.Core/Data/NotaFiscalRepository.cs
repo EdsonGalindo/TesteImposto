@@ -29,7 +29,6 @@ namespace Imposto.Core.Data
         {
             try
             {
-                criarConexaoBancoDeDados();
                 using (var comandoBancoDeDados = new SqlCommand())
                 {
                     comandoBancoDeDados.CommandText = "dbo.P_NOTA_FISCAL";
@@ -66,7 +65,6 @@ namespace Imposto.Core.Data
         {
             try
             {
-                criarConexaoBancoDeDados();
                 foreach (var itemNofiscal in notaFiscal.ItensDaNotaFiscal)
                 {
                     using (var comandoBancoDeDados = new SqlCommand())
@@ -93,6 +91,12 @@ namespace Imposto.Core.Data
                         comandoBancoDeDados.Parameters["@pNomeProduto"].Value = itemNofiscal.NomeProduto;
                         comandoBancoDeDados.Parameters.Add("@pCodigoProduto", SqlDbType.VarChar, 20);
                         comandoBancoDeDados.Parameters["@pCodigoProduto"].Value = itemNofiscal.CodigoProduto;
+                        comandoBancoDeDados.Parameters.Add("@pBaseIpi", SqlDbType.Decimal);
+                        comandoBancoDeDados.Parameters["@pBaseIpi"].Value = itemNofiscal.BaseIpi;
+                        comandoBancoDeDados.Parameters.Add("@pAliquotaIpi", SqlDbType.Decimal);
+                        comandoBancoDeDados.Parameters["@pAliquotaIpi"].Value = itemNofiscal.AliquotaIpi;
+                        comandoBancoDeDados.Parameters.Add("@pValorIpi", SqlDbType.Decimal);
+                        comandoBancoDeDados.Parameters["@pValorIpi"].Value = itemNofiscal.ValorIpi;
                         conexaoBancoDeDados.Open();
                         comandoBancoDeDados.ExecuteNonQuery();
                         conexaoBancoDeDados.Close();
@@ -106,7 +110,7 @@ namespace Imposto.Core.Data
 
         public NotaFiscalRepository()
         {
-            //criarConexaoBancoDeDados();
+            criarConexaoBancoDeDados();
         }
     }
 }

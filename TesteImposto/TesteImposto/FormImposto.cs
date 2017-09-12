@@ -73,7 +73,16 @@ namespace TesteImposto
             }
 
             service.GerarNotaFiscal(pedido);
+            limparTela();
             MessageBox.Show("Operação efetuada com sucesso");
+        }
+
+        private void limparTela()
+        {
+            this.textBoxNomeCliente.Clear();
+            this.txtEstadoOrigem.Clear();
+            this.txtEstadoDestino.Clear();
+            dataGridViewPedidos.DataSource = GetTablePedidos();
         }
     }
 }

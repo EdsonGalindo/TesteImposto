@@ -51,6 +51,7 @@ namespace Imposto.Core.Domain
             foreach (PedidoItem itemPedido in pedido.ItensDoPedido)
             {
                 NotaFiscalItem notaFiscalItem = new NotaFiscalItem();
+                #region Define CFOP
                 if ((this.EstadoOrigem == "SP") && (this.EstadoDestino == "RJ"))
                 {
                     notaFiscalItem.Cfop = "6.000";                    
@@ -139,6 +140,7 @@ namespace Imposto.Core.Domain
                 {
                     notaFiscalItem.Cfop = "6.010";
                 }
+
                 if (this.EstadoDestino == this.EstadoOrigem)
                 {
                     notaFiscalItem.TipoIcms = "60";
@@ -158,7 +160,9 @@ namespace Imposto.Core.Domain
                     notaFiscalItem.BaseIcms = itemPedido.ValorItemPedido;
                 }
                 notaFiscalItem.ValorIcms = notaFiscalItem.BaseIcms*notaFiscalItem.AliquotaIcms;
+                #endregion
 
+                #region Define o ICMS
                 if (itemPedido.Brinde)
                 {
                     notaFiscalItem.TipoIcms = "60";
@@ -167,6 +171,18 @@ namespace Imposto.Core.Domain
                 }
                 notaFiscalItem.NomeProduto = itemPedido.NomeProduto;
                 notaFiscalItem.CodigoProduto = itemPedido.CodigoProduto;
+                #endregion
+
+                #region Cálculo IPI
+                var valorAliquotaIpi = 0.1;
+                notaFiscalItem.BaseIpi = itemPedido.ValorItemPedido;
+
+                if (itemPedido.Brinde)
+                    valorAliquotaIpi = 0.0;
+
+                notaFiscalItem.AliquotaIpi = valorAliquotaIpi;
+                notaFiscalItem.ValorIpi = (notaFiscalItem.BaseIpi * notaFiscalItem.AliquotaIpi);
+                #endregion
 
                 ItensDaNotaFiscalAdicionar.Add(notaFiscalItem);
             }
@@ -194,7 +210,7 @@ namespace Imposto.Core.Domain
             if (notaFiscal == null)
                 return false;
 
-            diretorioArquivoNota = ConfigurationSettings.AppSettings["PastaXMLsNotasFicais"];
+            diretorioArquivoNota = ConfigurationManager.AppSettings["PastaXMLsNotasFicais"];
 
             if (string.IsNullOrWhiteSpace(diretorioArquivoNota))
                 return false;
