@@ -72,9 +72,20 @@ namespace TesteImposto
                     });
             }
 
-            service.GerarNotaFiscal(pedido);
-            limparTela();
-            MessageBox.Show("Operação efetuada com sucesso");
+            var mensagensRetorno = string.Empty;
+            var mensagemValidacao = service.validarPedido(pedido);
+
+            if (string.IsNullOrWhiteSpace(mensagemValidacao))
+            {
+                service.GerarNotaFiscal(pedido);
+                mensagensRetorno = "Operação efetuada com sucesso.";
+                limparTela();
+            }
+            else
+                mensagensRetorno = mensagemValidacao;
+
+            MessageBox.Show(mensagensRetorno);
+            
         }
 
         private void limparTela()

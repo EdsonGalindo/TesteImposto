@@ -37,6 +37,22 @@ namespace Imposto.Core.Domain
             ItensDaNotaFiscal = new List<NotaFiscalItem>();
         }
 
+        public string validarOrigemDestino(Pedido pedido)
+        {
+            StringBuilder mensagemValidacao = new StringBuilder();
+
+            if (!Enum.IsDefined(typeof(PedidoOrigem.Origens), pedido.EstadoOrigem))
+            {
+                mensagemValidacao.Append("Estado de origem inválido.");
+            }
+            if (!Enum.IsDefined(typeof(PedidoDestino.Destinos), pedido.EstadoDestino))
+            {
+                mensagemValidacao.Append((mensagemValidacao != null ? "\n" : "") + 
+                                         "Estado de destino inválido.");
+            }
+            return mensagemValidacao.ToString();
+        }
+
         public void EmitirNotaFiscal(Pedido pedido)
         {
             this.NumeroNotaFiscal = 99999;

@@ -58,7 +58,9 @@
     <Compile Include="Data\NotaFiscalRepository.cs" />
     <Compile Include="Domain\NotaFiscal.cs" />
     <Compile Include="Domain\NotaFiscalItem.cs" />
+    <Compile Include="Domain\PedidoOrigem.cs" />
     <Compile Include="Domain\Pedido.cs" />
+    <Compile Include="Domain\PedidoDestino.cs" />
     <Compile Include="Domain\PedidoItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\NotaFiscalService.cs" />

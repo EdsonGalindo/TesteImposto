@@ -9,10 +9,18 @@ namespace Imposto.Core.Service
 {
     public class NotaFiscalService
     {
-        public void GerarNotaFiscal(Domain.Pedido pedido)
+        public void GerarNotaFiscal(Pedido pedido)
         {
             NotaFiscal notaFiscal = new NotaFiscal();
+            
             notaFiscal.EmitirNotaFiscal(pedido);
+        }
+
+        public string validarPedido(Pedido pedido)
+        {
+            NotaFiscal notaFiscal = new NotaFiscal();
+            var mensagemValidacaoOrigemDestino = notaFiscal.validarOrigemDestino(pedido);            
+            return mensagemValidacaoOrigemDestino;
         }
     }
 }
