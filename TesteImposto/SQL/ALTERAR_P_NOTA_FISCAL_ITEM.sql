@@ -18,7 +18,7 @@ ALTER PROCEDURE [dbo].[P_NOTA_FISCAL_ITEM]
     @pCodigoProduto varchar(20),
     @pBaseIpi decimal(18,5),
     @pAliquotaIpi decimal(18,5),
-    @pValorIpi decimal(18,5)
+    @pDesconto decimal(18,5)
 )
 AS
 BEGIN
@@ -35,7 +35,8 @@ BEGIN
            ,[CodigoProduto]
            ,[BaseIpi]
            ,[AliquotaIpi]
-           ,[ValorIpi])
+           ,[ValorIpi]
+		   ,[Desconto])
 		VALUES
            (@pIdNotaFiscal,
 			@pCfop,
@@ -47,7 +48,8 @@ BEGIN
 			@pCodigoProduto,
 			@pBaseIpi,
 			@pAliquotaIpi,
-			@pValorIpi)
+			(@pBaseIpi * @pAliquotaIpi),
+			@pDesconto)
 
 		SET @pId = @@IDENTITY
 	END
@@ -64,7 +66,8 @@ BEGIN
 			,[CodigoProduto] = @pCodigoProduto
 			,[BaseIpi] = @pBaseIpi
 			,[AliquotaIpi] = @pAliquotaIpi
-			,[ValorIpi] = @pValorIpi
+			,[ValorIpi] = (@pBaseIpi * @pAliquotaIpi)
+			,[Desconto] = @pDesconto
 		 WHERE Id = @pId
 	END	    
 END

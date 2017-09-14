@@ -95,8 +95,8 @@ namespace Imposto.Core.Data
                         comandoBancoDeDados.Parameters["@pBaseIpi"].Value = itemNofiscal.BaseIpi;
                         comandoBancoDeDados.Parameters.Add("@pAliquotaIpi", SqlDbType.Decimal);
                         comandoBancoDeDados.Parameters["@pAliquotaIpi"].Value = itemNofiscal.AliquotaIpi;
-                        comandoBancoDeDados.Parameters.Add("@pValorIpi", SqlDbType.Decimal);
-                        comandoBancoDeDados.Parameters["@pValorIpi"].Value = itemNofiscal.ValorIpi;
+                        comandoBancoDeDados.Parameters.Add("@pDesconto", SqlDbType.Decimal);
+                        comandoBancoDeDados.Parameters["@pDesconto"].Value = itemNofiscal.Desconto;
                         conexaoBancoDeDados.Open();
                         comandoBancoDeDados.ExecuteNonQuery();
                         conexaoBancoDeDados.Close();

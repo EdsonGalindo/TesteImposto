@@ -200,6 +200,12 @@ namespace Imposto.Core.Domain
                 notaFiscalItem.ValorIpi = (notaFiscalItem.BaseIpi * notaFiscalItem.AliquotaIpi);
                 #endregion
 
+                #region Desconto
+                EstadoSudeste estadoSuldeste = new EstadoSudeste();
+                if (estadoSuldeste.verificarEstadoSudeste(pedido.EstadoDestino))
+                    notaFiscalItem.Desconto = (itemPedido.ValorItemPedido * 0.10);
+                #endregion
+
                 ItensDaNotaFiscalAdicionar.Add(notaFiscalItem);
             }
 

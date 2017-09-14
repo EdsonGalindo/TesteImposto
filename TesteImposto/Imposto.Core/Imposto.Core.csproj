@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\NotaFiscalRepository.cs" />
+    <Compile Include="Domain\CFOP.cs" />
+    <Compile Include="Domain\EstadoSudeste.cs" />
     <Compile Include="Domain\NotaFiscal.cs" />
     <Compile Include="Domain\NotaFiscalItem.cs" />
     <Compile Include="Domain\PedidoOrigem.cs" />
